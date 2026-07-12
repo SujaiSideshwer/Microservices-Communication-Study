@@ -1,6 +1,5 @@
 package ecom.microservices.order_service.service;
 
-import ecom.microservices.order_service.client.InventoryClient;
 import ecom.microservices.order_service.dto.Inventory;
 import ecom.microservices.order_service.exception.Custom4xxException;
 import org.springframework.http.HttpStatusCode;
@@ -16,7 +15,7 @@ public class OrderService {
 
     private final RestClient restClient;
 
-    public OrderService(InventoryClient inventoryClient, RestTemplate restTemplate, RestClient restClient) {
+    public OrderService(RestTemplate restTemplate, RestClient restClient) {
         this.restTemplate = restTemplate;
         this.restClient = restClient;
     }
