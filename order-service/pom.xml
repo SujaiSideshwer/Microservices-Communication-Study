@@ -45,6 +45,13 @@
 			<artifactId>spring-boot-starter-webmvc-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+		<!-- Kafka: gives us KafkaTemplate (publish) and @KafkaListener (subscribe). Boot 4 moved Kafka
+		     autoconfiguration out of spring-boot-autoconfigure into this dedicated starter. -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-kafka</artifactId>
+		</dependency>
 	</dependencies>
 
 	<dependencyManagement>

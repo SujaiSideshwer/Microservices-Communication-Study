@@ -1,0 +1,37 @@
+# Single-node Apache Kafka for local development (KRaft mode — no ZooKeeper).
+# Start it with:   docker compose up -d
+# Stop it with:    docker compose down
+#
+# Both microservices connect to the broker at localhost:9092.
+services:
+  kafka:
+    # Fully-qualified so Podman doesn't hit short-name registry resolution (Docker resolves it either way).
+    image: docker.io/apache/kafka:3.9.0
+    container_name: kafka
+    ports:
+      # 9092 is what our Spring Boot apps (running on the host) connect to.
+      - "9092:9092"
+    environment:
+      # ---- KRaft (controller + broker in one node) ----
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@localhost:9093
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+
+      # ---- Listeners ----
+      # INTERNAL (9092) is advertised to clients as localhost:9092 so apps on the host can reach it.
+      # CONTROLLER must also get an advertised entry here, otherwise the docker image's config
+      # generator defaults it to 0.0.0.0 and KafkaConfig.validateValues() refuses to start
+      # ("advertised.listeners cannot use the nonroutable meta-address 0.0.0.0").
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092,CONTROLLER://localhost:9093
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+
+      # ---- Single-node friendly settings ----
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      # Let the apps auto-create the topics they publish to on first send.
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"

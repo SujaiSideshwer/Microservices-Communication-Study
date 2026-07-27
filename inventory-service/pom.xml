@@ -54,6 +54,13 @@
 			<artifactId>h2</artifactId>
 			<scope>runtime</scope>
 		</dependency>
+
+		<!-- Kafka: @KafkaListener to consume payment events + KafkaTemplate to publish order-placed events.
+		     Boot 4 moved Kafka autoconfiguration out of spring-boot-autoconfigure into this dedicated starter. -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-kafka</artifactId>
+		</dependency>
 	</dependencies>
 
 	<build>

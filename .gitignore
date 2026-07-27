@@ -1,0 +1,37 @@
+# ===== IDE: IntelliJ IDEA (project opened at repo root) =====
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# ===== IDE: others =====
+.vscode/
+.settings/
+.project
+.classpath
+
+# ===== Build output (repo-wide; modules also ignore their own) =====
+target/
+build/
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+# ===== Maven wrapper downloaded jar =====
+.mvn/wrapper/maven-wrapper.jar
+
+# ===== Logs =====
+*.log
+logs/
+
+# ===== Local / secret config — keep out of the repo =====
+*.env
+.env.local
+application-local.properties
+application-local.yaml
+
+# ===== OS junk =====
+# Windows
+Thumbs.db
+Desktop.ini
+# macOS
+.DS_Store

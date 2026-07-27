@@ -13,5 +13,31 @@ spring:
       ddl-auto: update
     show-sql: true
 
+  # ===================== Kafka =====================
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: inventory-service
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JacksonJsonDeserializer
+      properties:
+        # Trust our own event package and, since producers don't send type headers,
+        # map every incoming payment message to this class.
+        spring.json.trusted.packages: "ecom.microservices.*"
+        spring.json.value.default.type: ecom.microservices.inventory_service.event.PaymentCompletedEvent
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JacksonJsonSerializer
+      properties:
+        spring.json.add.type.headers: false
+
 server:
   port: 8081
+
+# ---- Topic names (referenced from code) ----
+app:
+  kafka:
+    topic:
+      payment-completed: payment-completed
+      order-placed: order-placed
